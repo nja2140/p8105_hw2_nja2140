@@ -1,0 +1,15 @@
+---
+title: "p8105_hw2_nja2140"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Problem 1: Read and Clean the Mr. Trash Wheel dataset
+```{r}
+library(readxl)
+trash_data = 
+  read_excel ("./Trash Wheel.xlsx", sheet = 1)
+```
