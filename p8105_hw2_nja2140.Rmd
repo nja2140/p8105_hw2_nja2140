@@ -7,9 +7,47 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-Problem 1: Read and Clean the Mr. Trash Wheel dataset
+Problem 1: Read and Clean the Mr. Trash Wheel dataset.
+  -Specify the sheet in the Excel file and to omit non-data entries (rows with notes /     figures; columns containing notes) using arguments in read_excel
+  -Use reasonable variable names
+  -Omit rows that do not include dumpster-specific data
+  -Round the number of sports balls to the nearest integer and converts the result to an    integer variable (using as.integer)
 ```{r}
 library(readxl)
 trash_data = 
-  read_excel ("./Trash Wheel.xlsx", sheet = 1)
+  read_excel ("./Trash Wheel.xlsx", sheet = 1) %>%
+  janitor::clean_names() %>%
+  drop_na(dumpster) %>%
+  select(-15,-16,-17) %>%
+  mutate(sports_balls = as.integer (sports_balls))
+trash_data
 ```
+Read and clean precipitation data for 2017. Omit rows without precipitation data and add a variable year.
+
+```{r}
+trash17_data=
+  read_excel("./Trash Wheel.xlsx", sheet = 6, skip = 1) %>%
+  janitor::clean_names() %>%
+  drop_na() %>%
+  mutate(year = 2017)
+```
+Read and clean precipitation data for 2018. Omit rows without precipitation data and add a variable year.
+
+```{r}
+trash18_data=
+  read_excel("./Trash Wheel.xlsx", sheet = 5, skip = 1) %>%
+  janitor::clean_names() %>%
+  drop_na() %>%
+  mutate(year = 2018)
+trash18_data
+```
+
+Combine precipitation datasets and convert month to a character variable (the variable month.name is built into R and should be useful
+
+```{r}
+precip_data=
+  full_join(trash17_data, trash18_data) %>%
+  mutate(month = as.character (month)) 
+precip_data
+```
+
