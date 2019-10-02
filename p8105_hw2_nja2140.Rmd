@@ -59,16 +59,49 @@ Problem 2: Clean the pols-month dataset. Use separate() to break up the variable
 pol_data = 
   read_csv("./FiveThirtyEight/pols-month.csv") %>%
   janitor::clean_names() %>%
-  mutate(president = prez_gop + gov_gop + sen_gop + rep_gop + prez_dem + gov_dem + sen_dem + rep_dem) %>%
-  remove(prez_dem, prez_gap, day)
+  separate(mon, c("year", "month", "day")) %>%
+  mutate(
+    year = as.numeric(year),
+    month = as.numeric(month),
+    month = month.name[month]
+    ) %>%
+  mutate(president = ifelse(prez_gop ==1, "gop", "dem")) %>%
+  select(-prez_gop, -prez_dem, -day)
+pol_data
 ```
+Second, clean the data in snp.csv using a similar process to the above. For consistency across datasets, arrange according to year and month, and organize so that year and month are the leading columns.
 
-
-library(readxl)
-trash_data = 
-  read_excel ("./Trash Wheel.xlsx", sheet = 1) %>%
+```{r}
+snp_data =
+  read_csv("./FiveThirtyEight/snp.csv") %>%
   janitor::clean_names() %>%
-  drop_na(dumpster) %>%
-  select(-15,-16,-17) %>%
-  mutate(sports_balls = as.integer (sports_balls))
-trash_data
+  separate(date, c("month", "day", "year")) %>%
+  mutate(year = as.numeric(year),
+    month = as.numeric(month),
+    month = month.name[month]
+    ) %>%
+  select(year, month, -day, close) %>%
+  arrange (year, month)
+snp_data
+```
+Tidy the unemployment data so that it can be merged with the previous datasets. This process will involve switching from “wide” to “long” format; ensuring that key variables have the same name; and ensuring that key variables take the same values.
+
+```{r}
+une_data = 
+  read_csv("./FiveThirtyEight/unemployment.csv") %>%
+  janitor::clean_names() %>%
+  pivot_longer(
+    jan:dec,
+    names_to = "month",
+    values_to = "rate"
+  )
+une_data
+```
+Join the datasets by merging snp into pols, and merging unemployment into the result
+```{r}
+snppols_data=
+  full_join(snp_data, pol_data)
+total_data=
+  inner_join(snppols_data, une_data, by = "year")
+total_data
+```
