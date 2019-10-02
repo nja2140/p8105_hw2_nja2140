@@ -6,6 +6,7 @@ output: github_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(readxl)
+library(tidyverse)
 ```
 
 Problem 1: Read and Clean the Mr. Trash Wheel dataset.
@@ -16,7 +17,7 @@ Problem 1: Read and Clean the Mr. Trash Wheel dataset.
   
 ```{r}
 trash_data = 
-  read_excel("./Trash_Wheel.xlsx", sheet = 1) %>%
+  read_excel("./Data/Trash_Wheel.xlsx", sheet = 1) %>%
   janitor::clean_names() %>%
   drop_na(dumpster) %>%
   select(-15,-16,-17) %>%
@@ -27,7 +28,7 @@ Read and clean precipitation data for 2017. Omit rows without precipitation data
 
 ```{r}
 trash17_data=
-  read_excel("./Trash Wheel.xlsx", sheet = 6, skip = 1) %>%
+  read_excel("./Data/Trash_Wheel.xlsx", sheet = 6, skip = 1) %>%
   janitor::clean_names() %>%
   drop_na() %>%
   mutate(year = 2017)
@@ -37,7 +38,7 @@ Read and clean precipitation data for 2018. Omit rows without precipitation data
 
 ```{r}
 trash18_data=
-  read_excel("./Trash Wheel.xlsx", sheet = 5, skip = 1) %>%
+  read_excel("./Data/Trash_Wheel.xlsx", sheet = 5, skip = 1) %>%
   janitor::clean_names() %>%
   drop_na() %>%
   mutate(year = 2018)
@@ -57,7 +58,7 @@ Problem 2: Clean the pols-month dataset. Use separate() to break up the variable
 
 ```{r}
 pol_data = 
-  read_csv("./FiveThirtyEight/pols-month.csv") %>%
+  read_csv("./Data/pols-month.csv") %>%
   janitor::clean_names() %>%
   separate(mon, c("year", "month", "day")) %>%
   mutate(
@@ -73,7 +74,7 @@ Second, clean the data in snp.csv using a similar process to the above. For cons
 
 ```{r}
 snp_data =
-  read_csv("./FiveThirtyEight/snp.csv") %>%
+  read_csv("./Data/snp.csv") %>%
   janitor::clean_names() %>%
   separate(date, c("month", "day", "year")) %>%
   mutate(year = as.numeric(year),
@@ -88,7 +89,7 @@ Tidy the unemployment data so that it can be merged with the previous datasets. 
 
 ```{r}
 une_data = 
-  read_csv("./FiveThirtyEight/unemployment.csv") %>%
+  read_csv("./Data/unemployment.csv") %>%
   janitor::clean_names() %>%
   pivot_longer(
     jan:dec,
@@ -100,7 +101,7 @@ une_data
 Join the datasets by merging snp into pols, and merging unemployment into the result
 ```{r}
 snppols_data=
-  full_join(snp_data, pol_data)
+  full_join(pol_data, snp_data)
 total_data=
   inner_join(snppols_data, une_data, by = "year")
 total_data
