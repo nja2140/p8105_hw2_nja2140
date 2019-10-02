@@ -5,6 +5,7 @@ output: github_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(readxl)
 ```
 
 Problem 1: Read and Clean the Mr. Trash Wheel dataset.
@@ -12,10 +13,10 @@ Problem 1: Read and Clean the Mr. Trash Wheel dataset.
   -Use reasonable variable names
   -Omit rows that do not include dumpster-specific data
   -Round the number of sports balls to the nearest integer and converts the result to an    integer variable (using as.integer)
+  
 ```{r}
-library(readxl)
 trash_data = 
-  read_excel ("./Trash Wheel.xlsx", sheet = 1) %>%
+  read_excel("./Trash_Wheel.xlsx", sheet = 1) %>%
   janitor::clean_names() %>%
   drop_na(dumpster) %>%
   select(-15,-16,-17) %>%
@@ -31,6 +32,7 @@ trash17_data=
   drop_na() %>%
   mutate(year = 2017)
 ```
+
 Read and clean precipitation data for 2018. Omit rows without precipitation data and add a variable year.
 
 ```{r}
@@ -47,7 +49,26 @@ Combine precipitation datasets and convert month to a character variable (the va
 ```{r}
 precip_data=
   full_join(trash17_data, trash18_data) %>%
-  mutate(month = as.character (month)) 
+  mutate(month = month.abb[month]) 
 precip_data
 ```
 
+Problem 2: Clean the pols-month dataset. Use separate() to break up the variable mon into integer variables year, month, and day; replace month number with month name; create a president variable taking values gop and dem, and remove prez_dem and prez_gop; and remove the day variable
+
+```{r}
+pol_data = 
+  read_csv("./FiveThirtyEight/pols-month.csv") %>%
+  janitor::clean_names() %>%
+  mutate(president = prez_gop + gov_gop + sen_gop + rep_gop + prez_dem + gov_dem + sen_dem + rep_dem) %>%
+  remove(prez_dem, prez_gap, day)
+```
+
+
+library(readxl)
+trash_data = 
+  read_excel ("./Trash Wheel.xlsx", sheet = 1) %>%
+  janitor::clean_names() %>%
+  drop_na(dumpster) %>%
+  select(-15,-16,-17) %>%
+  mutate(sports_balls = as.integer (sports_balls))
+trash_data
