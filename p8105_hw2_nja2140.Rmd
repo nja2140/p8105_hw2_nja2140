@@ -106,3 +106,13 @@ total_data=
   inner_join(snppols_data, une_data, by = "year")
 total_data
 ```
+Problem 3: Load and tidy the data. Note that, although these data may seem fairly well formatted initially, the names of a categorical predictor and the case structure of string variables changed over time; you’ll need to address this in your data cleaning. Also, some rows seem duplicated, and these will need to be removed (hint: google something like “dplyr remove duplicate rows” to get started)
+
+```{r}
+baby_data=
+  read_csv("./Data/Popular_Baby_Names.csv") %>%
+  janitor::clean_names() 
+
+baby_data
+```
+
