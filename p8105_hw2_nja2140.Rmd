@@ -119,8 +119,9 @@ Problem 3: Load and tidy the data. Note that, although these data may seem fairl
 ```{r}
 baby_data=
   read_csv("./Data/Popular_Baby_Names.csv") %>%
-  janitor::clean_names() 
-
+  janitor::clean_names() %>%
+  distinct() %>%
+  mutate(ethnicity = recode(ethnicity, "ASIAN AND PACI" = "ASIAN AND PACIFIC ISLANDER", "BLACK NON HISP" = "BLACK NON HISPANIC", "WHITE NON HISP" = "WHITE NON HISPANIC"), ethnicity = str_to_lower(ethnicity), gender = str_to_lower(gender), childs_first_name = str_to_lower(childs_first_name)) 
 baby_data
 view(baby_data)
 ```
