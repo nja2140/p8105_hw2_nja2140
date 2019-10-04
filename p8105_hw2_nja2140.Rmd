@@ -53,6 +53,9 @@ precip_data=
   mutate(month = month.abb[month]) 
 precip_data
 ```
+Write a paragraph about these data; you are encouraged to use inline R. Be sure to note the number of observations in both resulting datasets, and give examples of key variables. For available data, what was the total precipitation in 2018? What was the median number of sports balls in a dumpster in 2017?
+
+The size of the dataset `trash_data` is `r nrow(trash_data)` obeervtaions and `r ncol(trash_data)` variables. The size of the dataset `precip_data` is `r nrow(precip_data)` observations and `r ncol(precip_data)` variables. Key variables include the type of trash picked up and when. The total precipitation for 2018 is `r sum(pull(trash18_data, total))`. The median number of sports balls in a dumpster in 2017 is `r median(pull(filter(trash_data, year == 2017),sports_balls))`.
 
 Problem 2: Clean the pols-month dataset. Use separate() to break up the variable mon into integer variables year, month, and day; replace month number with month name; create a president variable taking values gop and dem, and remove prez_dem and prez_gop; and remove the day variable
 
@@ -101,11 +104,13 @@ une_data
 Join the datasets by merging snp into pols, and merging unemployment into the result
 ```{r}
 snppols_data=
-  full_join(pol_data, snp_data)
+  left_join(pol_data, snp_data)
+snppols_data
 total_data=
-  inner_join(snppols_data, une_data, by = "year")
+  left_join(snppols_data, une_data)
 total_data
 ```
+
 Problem 3: Load and tidy the data. Note that, although these data may seem fairly well formatted initially, the names of a categorical predictor and the case structure of string variables changed over time; you’ll need to address this in your data cleaning. Also, some rows seem duplicated, and these will need to be removed (hint: google something like “dplyr remove duplicate rows” to get started)
 
 ```{r}
@@ -114,5 +119,6 @@ baby_data=
   janitor::clean_names() 
 
 baby_data
+view(baby_data)
 ```
 
