@@ -110,6 +110,9 @@ total_data=
   left_join(snppols_data, une_data)
 total_data
 ```
+Write a short paragraph about these datasets. 
+
+The size of the dataset `pol_data` is `r nrow(pol_data)` obeervtaions and `r ncol(pol_data)` variables. The size of the dataset `snp_data` is `r nrow(snp_data)` observations and `r ncol(snp_data)` variables. The size of the dataset `une_data` is `r nrow(une_data)` observations and `r ncol(une_data)` variables.The size of the dataset `total_data` is `r nrow(total_data)` observations and `r ncol(total_data)` variables. The resulting data set has data ranging from years 1947-2015. Key variables include the presidential and senators candidates party and unemployment rates.
 
 Problem 3: Load and tidy the data. Note that, although these data may seem fairly well formatted initially, the names of a categorical predictor and the case structure of string variables changed over time; you’ll need to address this in your data cleaning. Also, some rows seem duplicated, and these will need to be removed (hint: google something like “dplyr remove duplicate rows” to get started)
 
